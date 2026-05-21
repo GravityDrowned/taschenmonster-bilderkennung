@@ -1,12 +1,20 @@
-import numpy as np
 import cv2
 import pytesseract
 from matplotlib import pyplot as plt
 
+from state_machine import check_state
+
+
 def get_text_from_frame(img):
+    text = pytesseract.image_to_string(img, lang='eng')
+    return text
+
+def draw_bounding_boxes_on_frame(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     #extracted_text = pytesseract.image_to_string(gray, 'eng')
     data = pytesseract.image_to_data(gray, lang='eng', output_type=pytesseract.Output.DICT)
+
+    check_state(data)
 
     n_boxes = len(data['level'])
     for i in range(n_boxes):
@@ -25,12 +33,20 @@ def read_video(path):
     if not cap.isOpened():
         print("Error opening video stream or file")
 
+    i = 1
     while cap.isOpened():
+
         ret, frame = cap.read()
+        if i % 30 != 0:
+            i += 1
+            continue
+        i=1
         if ret:
             cv2.imshow('Frame', frame)
 
             text = get_text_from_frame(frame)
+            check_state(text)
+
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
