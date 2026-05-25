@@ -4,18 +4,21 @@ import nxbt
 import atexit
 import random
 
+nx = None
+
 def t():
-    return random.uniform(0.1, 0.3)
+     return random.uniform(0.1, 0.3)
 
 
 def init():
+    global nx
     # Start the NXBT service
     nx = nxbt.Nxbt()
 
     # Create a Pro Controller and wait for it to connect
     controller_index = nx.create_controller(nxbt.PRO_CONTROLLER)
     nx.wait_for_connection(controller_index)
-    atexit.register(shutdown)
+    atexit.register(shutdown, controller_index)
     return controller_index
 
 def play(controller_index, states):
@@ -75,4 +78,3 @@ def continue_battling(controller_index):
     for i in range(0, 2):
         nx.press_buttons(controller_index, [nxbt.Buttons.A], t())
         time.sleep(t())
-

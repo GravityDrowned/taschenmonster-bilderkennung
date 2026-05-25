@@ -60,7 +60,6 @@ def read_video(path):
 
 def main():
     read_video("data/fight.MOV")
-    print("Hello from pkmn!")
 
 if __name__ == "__main__":
     main()
