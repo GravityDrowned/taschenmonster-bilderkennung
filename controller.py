@@ -17,6 +17,7 @@ def init():
 
     # Create a Pro Controller and wait for it to connect
     controller_index = nx.create_controller(nxbt.PRO_CONTROLLER)
+    print("Waiting for Nintendo Switch to connect... (open Change Grip/Order on Switch)")
     nx.wait_for_connection(controller_index)
     atexit.register(shutdown, controller_index)
     return controller_index
