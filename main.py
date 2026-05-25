@@ -4,7 +4,7 @@ from doctr.models import ocr_predictor
 from controller import play, init
 from state_machine import get_states
 
-predictor = ocr_predictor(pretrained=True)
+predictor = None
 
 
 def get_text_from_frame(img):
@@ -64,6 +64,10 @@ def read_webcam():
 
 
 def main():
+    global predictor
+    print("Loading OCR model...")
+    predictor = ocr_predictor(pretrained=True)
+    print("OCR model loaded.")
     read_webcam()
 
 
