@@ -1,6 +1,8 @@
 import cv2
 from doctr.models import ocr_predictor
-from state_machine import check_state
+
+from controller import play, init
+from state_machine import get_states
 
 predictor = ocr_predictor(pretrained=True)
 
@@ -13,7 +15,7 @@ def draw_bounding_boxes_on_frame(img):
     h_img, w_img = img.shape[:2]
     rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     result = predictor([rgb])
-    check_state(result.render())
+    get_states(result.render())
     for block in result.pages[0].blocks:
         for line in block.lines:
             for word in line.words:
@@ -29,18 +31,26 @@ def read_video(path):
     cap = cv2.VideoCapture(path)
     if not cap.isOpened():
         print("Error opening video stream or file")
+
+    controller_index = init()
+
     i = 1
     while cap.isOpened():
         ret, frame = cap.read()
-        if i % 30 != 0:
+        if i % 60 != 0:
             i += 1
             continue
         i = 1
         if ret:
             cv2.imshow('Frame', frame)
+
             text = get_text_from_frame(frame)
             draw_bounding_boxes_on_frame(frame)
-            check_state(text)
+            states = get_states(text)
+            print(states)
+
+            play(controller_index, states)
+
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
         else:
