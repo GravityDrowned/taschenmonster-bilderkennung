@@ -6,10 +6,12 @@ from state_machine import get_states
 
 predictor = ocr_predictor(pretrained=True)
 
+
 def get_text_from_frame(img):
     rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     result = predictor([rgb])
     return result.render()
+
 
 def draw_bounding_boxes_on_frame(img):
     h_img, w_img = img.shape[:2]
@@ -27,8 +29,10 @@ def draw_bounding_boxes_on_frame(img):
                 cv2.rectangle(img, (x, y), (x2, y2), (255, 0, 0), 2)
     cv2.imshow('Frame', img)
 
-def read_video(path):
-    cap = cv2.VideoCapture(path)
+
+def read_webcam(path):
+    # cap = cv2.VideoCapture(path)
+    cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Error opening video stream or file")
 
@@ -58,8 +62,10 @@ def read_video(path):
     cap.release()
     cv2.destroyAllWindows()
 
+
 def main():
-    read_video("data/fight.MOV")
+    read_webcam()
+
 
 if __name__ == "__main__":
     main()
