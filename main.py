@@ -30,7 +30,7 @@ def draw_bounding_boxes_on_frame(img):
     cv2.imshow('Frame', img)
 
 
-def read_webcam(path):
+def read_webcam():
     # cap = cv2.VideoCapture(path)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
