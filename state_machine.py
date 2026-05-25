@@ -11,6 +11,7 @@ states_cut = {
     "in_progress": "Matchmaking",
     "team_selection": "send into battle",
     "combat_fight_or_team": "Battle info",
+    "combat_attack": "FIGHT",
     "combat_switch": "Moves",
     "continue": "Continue Battling",
 }
