@@ -12,6 +12,11 @@ from pydantic import BaseModel
 
 from server import controller
 
+import asyncio
+from fastapi import FastAPI
+from concurrent.futures import ThreadPoolExecutor
+
+executor = ThreadPoolExecutor(max_workers=1)  # nxbt is not truly thread-safe, limit to 1
 controller_index = None
 
 
@@ -39,11 +44,12 @@ def health():
 
 
 @app.post("/play")
-def play(request: PlayRequest):
+async def play(request: PlayRequest):
+    loop = asyncio.get_event_loop()
     if controller_index is None:
         raise HTTPException(status_code=503, detail="Controller not initialized")
     try:
-        controller.play(controller_index, request.states)
+        await loop.run_in_executor(executor, controller.play, controller_index, request.states)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {"ok": True}

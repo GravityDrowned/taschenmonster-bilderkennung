@@ -13,17 +13,23 @@ def init():
     print("Initializing nx...")
 
     saved_addresses = nx.get_switch_addresses()
-    print(f"Found saved Switch addresses: {saved_addresses}")
-
+    print(f"Attempting reconnect to: {saved_addresses}")
     controller_index = nx.create_controller(
         nxbt.PRO_CONTROLLER,
-        reconnect_address=saved_addresses
+        reconnect_address=saved_addresses if saved_addresses else None
     )
     print(f"Waiting for Nintendo Switch to connect... (Index: {controller_index})")
 
     nx.wait_for_connection(controller_index)
-    print(f"Nintendo Switch connected! (Index: {controller_index})")
 
+    final_state = nx.state[controller_index]["state"]
+    if final_state != "connected":
+        raise RuntimeError(
+            f"Controller failed to connect. State: {final_state}. "
+            f"Errors: {nx.state[controller_index]['errors']}"
+        )
+
+    print(f"Controller state confirmed: {final_state}")
     atexit.register(shutdown, controller_index)
     return controller_index
 
@@ -47,7 +53,7 @@ def shutdown(controller_index):
 
 
 def t():
-    return random.uniform(1.1, 1.3)
+    return random.uniform(0.6, 0.9)
 
 
 def select_team(controller_index):
@@ -70,6 +76,7 @@ def select_team(controller_index):
 def combat_attack(controller_index):
     for i in range(0, 2):
         nx.press_buttons(controller_index, [nxbt.Buttons.A], t())
+        time.sleep(0.5)
         time.sleep(t())
 
 
