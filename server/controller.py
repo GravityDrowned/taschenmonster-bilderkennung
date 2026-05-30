@@ -12,10 +12,12 @@ def init():
     # Start the NXBT service
     nx = nxbt.Nxbt()
     print("Initializing nx", nx)
+    time.sleep(2)
 
     # Create a Pro Controller and wait for it to connect
     controller_index = nx.create_controller(nxbt.PRO_CONTROLLER)
     print("Waiting for Nintendo Switch to connect... (open Change Grip/Order on Switch)", controller_index)
+    time.sleep(2)
 
     nx.wait_for_connection(controller_index)
     print("Nintendo Switch connected!", controller_index)
