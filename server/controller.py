@@ -9,18 +9,20 @@ nx = None
 
 def init():
     global nx
-    # Start the NXBT service
     nx = nxbt.Nxbt()
-    print("Initializing nx", nx)
-    time.sleep(2)
+    print("Initializing nx...")
 
-    # Create a Pro Controller and wait for it to connect
-    controller_index = nx.create_controller(nxbt.PRO_CONTROLLER)
-    print("Waiting for Nintendo Switch to connect... (open Change Grip/Order on Switch)", controller_index)
-    time.sleep(2)
+    saved_addresses = nx.get_switch_addresses()
+    print(f"Found saved Switch addresses: {saved_addresses}")
+
+    controller_index = nx.create_controller(
+        nxbt.PRO_CONTROLLER,
+        reconnect_address=saved_addresses
+    )
+    print(f"Waiting for Nintendo Switch to connect... (Index: {controller_index})")
 
     nx.wait_for_connection(controller_index)
-    print("Nintendo Switch connected!", controller_index)
+    print(f"Nintendo Switch connected! (Index: {controller_index})")
 
     atexit.register(shutdown, controller_index)
     return controller_index
@@ -88,6 +90,7 @@ def continue_battling(controller_index):
     for i in range(0, 2):
         nx.press_buttons(controller_index, [nxbt.Buttons.A], t())
         time.sleep(t())
+
 
 if __name__ == "__main__":
     print("Let's go!")
