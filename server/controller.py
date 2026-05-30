@@ -47,17 +47,18 @@ def shutdown(controller_index):
 
 
 def t():
-    return random.uniform(0.1, 0.3)
+    return random.uniform(1.1, 1.3)
 
 
 def select_team(controller_index):
+    time.sleep(10)
     for i in range(0, 3):
         nx.press_buttons(controller_index, [nxbt.Buttons.A], t())
         time.sleep(t())
         nx.press_buttons(controller_index, [nxbt.Buttons.DPAD_DOWN], t())
         time.sleep(t())
 
-    for i in range(0, 4):
+    for i in range(0, 3):
         nx.press_buttons(controller_index, [nxbt.Buttons.DPAD_DOWN], t())
         time.sleep(t())
 
