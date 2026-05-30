@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from state_machine import get_states
 
-PI_URL = "http://raspberrypi.local:8000"
+PI_URL = "http://192.168.178.52:8000"
 
 predictor = None
 
